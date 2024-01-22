@@ -5,8 +5,14 @@ import { signIn, useSession } from 'next-auth/react'
 import { useMutation } from 'react-query'
 import axios from 'axios'
 import { Button } from './ui/button'
-import { Comment } from '@prisma/client'
+import { Comment, Prisma } from '@prisma/client'
 import { Github, Mail } from 'lucide-react'
+import { useComments } from '@/app/hooks/useComments'
+import { Avatar } from './ui/avatar'
+import { AvatarFallback, AvatarImage } from '@radix-ui/react-avatar'
+
+type CommentWithUser = Prisma.CommentGetPayload<{include: {user: true}}>
+
 export default function Comments({postSlug} : {postSlug: string}) {
     const [content, setContent] = useState("")
     const { data: session } = useSession()
@@ -31,6 +37,8 @@ export default function Comments({postSlug} : {postSlug: string}) {
         mutate({content,postSlug})
         
     }
+
+    const {data: comments, isFetching } = useComments(postSlug)
     return (
         <div className='mt-10'>
             <Separator />
@@ -46,7 +54,7 @@ export default function Comments({postSlug} : {postSlug: string}) {
                     />
                     <Button disabled={content == ""}
                     onClick={onSubmit}
-                    className='mt-4'>
+                    className='mt-4 mb-8'>
                         Add your comment
                     </Button>
                 </div>
@@ -65,7 +73,26 @@ export default function Comments({postSlug} : {postSlug: string}) {
                 )
                 }
                 
-
+                {isFetching ? ( 
+                    <p>Loading comments</p>  
+                ) : ( 
+                comments.map((comment: CommentWithUser) => (
+                   <div className='flex items-center mb-5' key={comment.id}>
+                        <Avatar>
+                            <AvatarImage src={comment.user.image || "/public/images/test.png"}/>
+                            <AvatarFallback>{comment.user.name}</AvatarFallback>
+                        </Avatar>
+                        <div className='ml-3 p-4 border rounded-lg border-slate-400'>
+                            <div className='flex items-center gap-2'>
+                                <span>{comment.user.name}</span>
+                                <span className='text-slate-500 text-sm'>{new Date(comment.createdAt).toLocaleDateString()}</span>
+                            </div>
+                            <p>{comment.content}</p>
+                        </div>
+                        
+                   </div> 
+                )))}
+                
             </div>
         </div>
     )
