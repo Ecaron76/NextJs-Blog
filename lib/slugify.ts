@@ -1,6 +1,6 @@
 export function slugify(str: string){
     return String(str)
-        .normalize("NKFD")
+        .normalize("NFKD")
         .replace(/[\u0300-\u036f]/g, "")
         .trim()
         .toLocaleLowerCase()

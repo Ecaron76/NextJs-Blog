@@ -6,6 +6,7 @@ import bg from '../../../assets/images/bg/dev-bg.jpg'
 import { Eye, MessageCircle } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { usePost } from '@/app/hooks/usePost'
+import Comments from '@/components/comments'
 export default function SingePostPage({
     params
     }: {params: {slug: string}}){
@@ -19,7 +20,7 @@ export default function SingePostPage({
     <PageContainer>
         <article className='p-12'>
             <section className='flex w-full h-50 relative justify-center items-center '>
-                <Image src={bg} alt={'test'} className=' w-full h-96' /> 
+                <Image src={post?.image || bg} alt={post?.title as string} className=' w-full h-96' width={500} height={500}/> 
                 <div className='flex-col items-center max-w-full w-3/5 p-6 gap-6 bg-stone-800/50 absolute'>
                     <h2 className='text-3xl text-center my-2'>{post?.title}</h2>
                 </div>
@@ -55,8 +56,7 @@ export default function SingePostPage({
                 </div>
             </section>
             <section className='py-4'>
-                <h2 className='text-2xl text-slate-400 font-bold'>Comments</h2>
-                <p>Login to write a comment</p>
+                <Comments  postSlug={slug}/>
             </section>
         </article>
     </PageContainer>

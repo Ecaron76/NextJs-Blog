@@ -29,6 +29,19 @@ export default function Write() {
 
   const { data: categories, isFetching } = useCategories()
 
+  const uploadImage = async () => {
+    try {
+      if (!file) return;
+
+      const data= new FormData()
+      data.set("file", file)
+
+      const response = await axios.post("/api/upload", data)
+      return response.data
+    } catch (error) {
+      console.log("Error in uploading Image", error)
+    }
+  }
   const onChangeFile = (e: SyntheticEvent) => {
     const files = (event?.target as HTMLInputElement).files
 
@@ -54,7 +67,8 @@ export default function Write() {
 
     const image = await uploadImage()
     console.log("image is ", image)
-    if (title != "" && catSlug != "" && content!= "") {
+    if (title != "" && catSlug != "" && content!= "" && image) {
+      console.log('ok')
       await mutate({
         title,
         content,
@@ -62,20 +76,6 @@ export default function Write() {
         slug: slugify(title),
         image: image
       })
-    }
-  }
-
-  const uploadImage = async () => {
-    try {
-      if (!file) return;
-
-      const data= new FormData()
-      data.set("file", file)
-
-      const response = await axios.post("/api/upload", data)
-      return response.data
-    } catch (error) {
-      console.log("Error in uploading Image", error)
     }
   }
 

@@ -9,12 +9,13 @@ import {
     CardHeader,
     CardTitle,
   } from "@/components/ui/card"
-import bg from '../assets/images/bg/dev-bg.jpg'
+import bg from '/assets/images/bg/dev-bg.jpg'
 import { Badge } from './ui/badge'
 import Image from 'next/image'
 import { Eye, MessageCircle } from 'lucide-react'
 import Link from 'next/link'
-import {Post} from '@prisma/client'
+import { Post } from '@prisma/client'
+
 
 type PostsListProps = {
     posts: Post[];
@@ -29,11 +30,11 @@ export default function PostsList({posts}:PostsListProps) {
                     <Card key={post?.id} className='w-4/12'>
                         <Link href={`/posts/${post.slug}`}>
                     <CardHeader>
-                        <Image src={bg} alt='test' className=' w-full aspect-square'/>
+                        <Image src={post.image || bg} alt='test' className=' w-full aspect-square object-cover transition-all' width={200} height={200}/>
                         <CardTitle className='text-lg font-semibold mt-3'>{post.title}</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        {/* <Badge variant={'outline'}>{post.category}</Badge> */}
+                        <Badge variant={'outline'}>{post.catSlug}</Badge>
                     </CardContent>
                     <CardFooter className=''>
                         <div className='flex gap-2'>
