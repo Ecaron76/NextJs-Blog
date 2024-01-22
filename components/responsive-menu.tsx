@@ -1,12 +1,13 @@
-import React from 'react'
+'use client'
 import { Sheet, SheetContent, SheetTrigger } from './ui/sheet'
 import { Menu } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from './ui/button'
-import { CATEGORIES } from '@/utils/categorie'
-import { Category } from '@/type'
+import { useCategories } from '@/app/hooks/useCategories'
+import { Category } from '@prisma/client'
 
 export default function ResponsiveMenu() {
+  const {data: categories, isFetching} = useCategories() 
   return (
     
       <Sheet>
@@ -17,8 +18,8 @@ export default function ResponsiveMenu() {
             <div className='flex flex-col gap-4'>
                 <Link href='/write'><Button variant='ghost'>Write A Post</Button></Link>
                 <p>Catégories</p>
-                {CATEGORIES.map((category: Category) => (
-                    <Link key={category.id} href={`categories/${category.slug}`} className='block px-2 py-1 text-lg'> {category.name} </Link>
+                {!isFetching && categories.map((category: Category ) => (
+                    <Link key={category.id} href={`categories/${category.slug}`} className='block px-2 py-1 text-lg'> {category.title} </Link>
                     
                     ))}
             </div>

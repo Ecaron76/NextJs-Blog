@@ -5,6 +5,8 @@ import Link from 'next/link'
 import Header from '@/components/header'
 import { ThemeProvider } from '@/components/theme-provider'
 import Footer from '@/components/footer'
+import QueryProvider from './provider/query-provider'
+import AuthProvider from './provider/auth-provider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -21,21 +23,20 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-      <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <Header />
-            {children}
-            <Footer />
-          </ThemeProvider>
-        
-        
-          
-        
-        
+        <QueryProvider>
+          <AuthProvider>
+            <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                <Header />
+                {children}
+                <Footer />
+            </ThemeProvider>
+          </AuthProvider>
+        </QueryProvider>
       </body>
 
     </html>

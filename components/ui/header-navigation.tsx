@@ -14,11 +14,12 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
-import { CATEGORIES } from "@/utils/categorie"
-import { Category } from "@/type"
+import { useCategories } from "@/app/hooks/useCategories"
+import { Category } from "@prisma/client"
 
 
 export function HeaderNavigation() {
+  const {data: categories, isFetching} = useCategories() 
   return (
     <NavigationMenu>
       <NavigationMenuList>
@@ -26,12 +27,12 @@ export function HeaderNavigation() {
           <NavigationMenuTrigger>Categories</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-              {CATEGORIES.map((category: Category) => (
+               {!isFetching && categories.map((category: Category) => (
                 <ListItem
                   key={category.id}
-                  href={`/categories/'${category.slug}`}
+                  href={`/categories/${category.slug}`}
                 >
-                  {category.name}
+                  {category.title}
                 </ListItem>
               ))}
             </ul>
