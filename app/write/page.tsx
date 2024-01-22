@@ -51,16 +51,32 @@ export default function Write() {
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault()
+
+    const image = await uploadImage()
+    console.log("image is ", image)
     if (title != "" && catSlug != "" && content!= "") {
       await mutate({
         title,
         content,
         catSlug,
         slug: slugify(title),
-        image: "/assets/images/dev-bg-jpg"
+        image: image
       })
     }
-    
+  }
+
+  const uploadImage = async () => {
+    try {
+      if (!file) return;
+
+      const data= new FormData()
+      data.set("file", file)
+
+      const response = await axios.post("/api/upload", data)
+      return response.data
+    } catch (error) {
+      console.log("Error in uploading Image", error)
+    }
   }
 
   if (!session) {
